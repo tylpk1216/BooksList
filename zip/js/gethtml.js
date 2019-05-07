@@ -1,12 +1,4 @@
-function sendResponse(items) {
-    chrome.runtime.sendMessage({
-        action: "getSource",
-        source: items,
-        url: document.URL
-    });
-}
-
-let bookStores = [
+var bookStores = [
     {
         name: 'readmoo',
         func: showReadmooBooks
@@ -20,6 +12,14 @@ let bookStores = [
         func: showGoogleBooks
     }
 ];
+
+function sendResponse(items) {
+    chrome.runtime.sendMessage({
+        action: "getSource",
+        source: items,
+        url: document.URL
+    });
+}
 
 function showReadmooBooks(source) {
     let regex = /<div class=\"title\" title=\"(.*)\">/g;
