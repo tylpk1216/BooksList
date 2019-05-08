@@ -13,7 +13,7 @@ function setMessage(strLen, msg) {
     }
 
     disableLoadingImg(true);
-    $progressBar.text();
+    $progressBar.text('');
 }
 
 function disableLoadingImg(status) {

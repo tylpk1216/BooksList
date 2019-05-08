@@ -168,7 +168,9 @@ function processKobo(source) {
     let koboArg = getKoboBookArg(source);
 
     if (koboArg === null) {
-        sendBooksMessage('no kobo data');
+        // only one page?
+        showKoboBooks(source);
+        return;
     }
 
     for (let i = 1; i <= koboArg.pageNumber; i++) {
