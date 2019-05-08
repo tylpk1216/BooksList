@@ -1,0 +1,21 @@
+#message
+{
+    font-size: 14px;
+    margin: 5px auto;
+    text-align: left;
+    white-space: pre-line;
+}
+
+#loading
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#progressbar
+{
+    font-size: 14px;
+    margin: 5px auto;
+    width: 100px;
+}

@@ -1,11 +1,26 @@
 const messageID = '#message';
+const loadingImgID = '#loading';
+const progressBarID = '#progressbar';
 
-let message = null;
+let $messagePanel = null;
+let $loadingImg = null;
+let $progressBar = null;
 
 function setMessage(strLen, msg) {
-    if (message) {
-        message.style.width = strLen * 15 + 'px';
-        message.innerText = msg;
+    if ($messagePanel) {
+        $messagePanel.css('width', (strLen * 15).toString() + 'px');
+        $messagePanel.text(msg);
+    }
+
+    disableLoadingImg(true);
+    $progressBar.text();
+}
+
+function disableLoadingImg(status) {
+    if (status) {
+        $loadingImg.hide();
+    } else {
+        $loadingImg.show();
     }
 }
 
@@ -23,14 +38,29 @@ function getNumberString(len, index) {
 }
 
 function onWindowLoad() {
-    message = document.querySelector(messageID);
+    $messagePanel = $(messageID);
+    $loadingImg = $(loadingImgID);
+    $progressBar = $(progressBarID);
+
+    disableLoadingImg(false);
+
     chrome.tabs.executeScript(null, {
-        file: "js/gethtml.js"
+        file: "js/jquery.min.js"
     }, function() {
         if (chrome.runtime.lastError) {
             let errorMsg = chrome.runtime.lastError.message;
-            message.innerText = 'error : \n' + errorMsg;
+            setMessage(errorMsg.length, errorMsg);
+            return;
         }
+
+        chrome.tabs.executeScript(null, {
+            file: "js/gethtml.js"
+        }, function() {
+            if (chrome.runtime.lastError) {
+                let errorMsg = chrome.runtime.lastError.message;
+                setMessage(errorMsg.length, errorMsg);
+            }
+        });
     });
 }
 
@@ -50,9 +80,16 @@ function showMessage(items) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
-    if (request.action == "getSource") {
+    if (request.action == "getBooks") {
+        if (!Array.isArray(request.source)) {
+            setMessage(request.source.length, request.source);
+            return;
+        }
+
         let items = request.source;
         showMessage(items);
+    } else if (request.action == 'progressMsg') {
+        $progressBar.text(request.source);
     }
 });
 
