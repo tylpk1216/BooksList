@@ -4,13 +4,13 @@ chrome.runtime.onInstalled.addListener(function() {
             {
                 conditions: [
                     new chrome.declarativeContent.PageStateMatcher({
-                        pageUrl: {hostEquals: 'new-read.readmoo.com'},
+                        pageUrl: {hostEquals: 'new-read.readmoo.com', pathContains:'library'},
                     }),
                     new chrome.declarativeContent.PageStateMatcher({
-                        pageUrl: {hostEquals: 'www.kobo.com'},
+                        pageUrl: {hostEquals: 'www.kobo.com', pathContains:'library'},
                     }),
                     new chrome.declarativeContent.PageStateMatcher({
-                        pageUrl: {hostEquals: 'play.google.com'},
+                        pageUrl: {hostEquals: 'play.google.com', pathContains:'books'},
                     })
                 ],
                 actions: [new chrome.declarativeContent.ShowPageAction()]
