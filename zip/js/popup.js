@@ -54,12 +54,21 @@ function onWindowLoad() {
         }
 
         chrome.tabs.executeScript(null, {
-            file: "js/gethtml.js"
+            file: "js/xlsx.full.min.js"
         }, function() {
             if (chrome.runtime.lastError) {
                 let errorMsg = chrome.runtime.lastError.message;
                 setMessage(errorMsg.length, errorMsg);
             }
+
+            chrome.tabs.executeScript(null, {
+                file: "js/gethtml.js"
+            }, function() {
+                if (chrome.runtime.lastError) {
+                    let errorMsg = chrome.runtime.lastError.message;
+                    setMessage(errorMsg.length, errorMsg);
+                }
+            });
         });
     });
 }

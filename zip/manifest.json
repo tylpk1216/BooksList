@@ -1,15 +1,16 @@
 {
     "name": "The books list",
-    "version": "1.5",
+    "version": "1.7",
     "description": "取得書籍清單(Readmoo, Kobo, Google Play Books)",
     "manifest_version": 2,
     "background": {
         "scripts": [
-            "js/background.js"
+            "js/background.js",
+            "js/xlsx.full.min.js"
         ],
         "persistent": false
     },
-    "permissions": ["declarativeContent", "activeTab"],
+    "permissions": ["declarativeContent", "activeTab", "downloads"],
     "page_action": {
         "default_popup": "html/popup.html",
         "default_icon": {

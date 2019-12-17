@@ -17,7 +17,24 @@ var items = [];
 var actionCount = 0;
 var actions = [];
 
+function downloadExcel(items) {
+    let ws_data = [];
+    for (let i = 0; i < items.length; i++) {
+        ws_data.push([i+1, items[i]]);
+    }
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    XLSX.utils.book_append_sheet(wb, ws, "List");
+    XLSX.writeFile(wb, '購買書籍清單.xlsx');
+}
+
 function sendBooksMessage(items) {
+    if (Array.isArray(items)) {
+        downloadExcel(items);
+    }
+
     chrome.runtime.sendMessage({
         action: "getBooks",
         source: items,
@@ -72,6 +89,7 @@ function processReadmoo(source) {
     let max = 48;
     let index = 0;
     let stop = false;
+
     while (!stop) {
         if (totalCount < max) {
             stop = true;
@@ -130,15 +148,33 @@ function showReadmooBooks(source) {
 }
 
 /* ----------------- Kobo ----------------- */
+function getKoboPageSize(source) {
+    let pageSize = 24;
+    let regex = /<p class=\"title product-field.*>\n.*>(.*)</g;
+
+    let info;
+    let count = 0;
+    while ((info = regex.exec(source)) != null) {
+        count++;
+    }
+
+    if (count > 0) {
+        pageSize = count;
+    }
+
+    return pageSize;
+}
+
 function getKoboBookArg(source) {
     // <a href="/tw/zh/library?filter=All&pageSize=24&pageNumber=2" class="page-link final" data-track-info="{&quot;description&quot;:&quot;goToPage2&quot;}" translate="no">2</a>
-    let regex = /pageSize=(\d+)&amp;pageNumber=(\d+).*class=\"page-link final/g;
+    let regex = /pageNumber=(\d+).*class=\"page-link final/g;
+    let pageSize = getKoboPageSize(source);
 
     let info = regex.exec(source);
     if (info != null) {
         return {
-            pageSize: parseInt(info[1]),
-            pageNumber: parseInt(info[2])
+            pageSize: pageSize,
+            pageNumber: parseInt(info[1])
         };
     }
 
@@ -146,8 +182,8 @@ function getKoboBookArg(source) {
 }
 
 function parseKoboResponse(data, result) {
-    // <img class="cover-image notranslate_alt" alt="xxxx" title="xxxxx"
-    let regex = /<img class=\"cover-image notranslate_alt\" alt=\".*\" title=\"(.*)\" aria-hidden=\"true\"/g;
+    // <img class="cover-image  notranslate_alt" alt="xxxx" title="xxxxx"
+    let regex = /<img class=\"cover-image  notranslate_alt\" alt=\".*\" title=\"(.*)\" aria-hidden=\"true\"/g;
 
     let info;
     while ((info = regex.exec(data)) != null) {
