@@ -182,8 +182,8 @@ function getKoboBookArg(source) {
 }
 
 function parseKoboResponse(data, result) {
-    // <img class="cover-image  notranslate_alt" alt="xxxx" title="xxxxx"
-    let regex = /<img class=\"cover-image  notranslate_alt\" alt=\".*\" title=\"(.*)\" aria-hidden=\"true\"/g;
+    // <img class="cover-image  notranslate_alt" alt="xxxx" src...
+    let regex = /<img class=\"cover-image  notranslate_alt\" alt=\"(.*)\" src/g;
 
     let info;
     while ((info = regex.exec(data)) != null) {
